@@ -1,25 +1,6 @@
 <?php
-/* SVN FILE: $Id$ */
-/**
- * Short description for file.
+/*
  *
- * Long description for file
- *
- * PHP5
- *
- * Modula ERP. Planning your company in smart CakePHP.
- * RafaelBandeira <rafaelbandeira3@gmail.com>
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @filesource		$URL$
- * @copyright		Copyright 2008, Rafael Bandeira.
- * @since			Modula ERP v0.1
- * @version			$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
  
 class LinkableBehavior extends ModelBehavior {
