@@ -1,6 +1,32 @@
 <?php
 /*
+ * LinkableBehavior
+ * Light-weight approach for data mining on deep relations between models. 
+ * Join tables based on model relations to easily enable right to left find operations.
+ * 
+ * Can be used as a alternative to the ContainableBehavior:
+ * - On data fetching only in right to left operations,
+ * wich means that in "one to many" relations (hasMany, hasAndBelongsToMany)
+ * should only be used from the "many to one" tables. i.e:
+ * To fetch all Users assigneds to a Project with ProjectAssignment,
+ * Project::find('all', array('link' => 'User', 'conditions' => 'project_id = 1')) 
+ *	 - Won't produce the desired result as data came from users table will be lost.
+ * User::find('all', array('link' => 'Project', 'conditions' => 'project_id = 1'))
+ *   - Will fetch all users related to the specified project in one query
+ * 
+ * - On data mining as a much lighter approach - can reduce 300+ query find operations
+ * in one single query with joins; "or your money back!" ;-)
  *
+ * - Has the 'fields' param enabled to make it easy to replace Containable usage,
+ * only change the 'contain' param to 'link'.
+ *
+ * Linkable Behavior. Taking it easy in your DB.
+ * RafaelBandeira <rafaelbandeira3@gmail.com>
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *  
+ * @version 0.2; 
  */
  
 class LinkableBehavior extends ModelBehavior {
