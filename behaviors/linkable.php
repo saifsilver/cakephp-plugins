@@ -21,7 +21,7 @@
  * only change the 'contain' param to 'link'.
  *
  * Linkable Behavior. Taking it easy in your DB.
- * RafaelBandeira <rafaelbandeira3@gmail.com>
+ * RafaelBandeira <rafaelbandeira3(at)gmail(dot)com>
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
