@@ -54,9 +54,6 @@ class LinkableBehavior extends ModelBehavior {
 			$cont = 0;
 			do {
 				$iterator = $iterators[$cont];
-				if (!is_array($iterator)) {
-					$iterator = array($iterator);
-				}
 				$defaults = $optionsDefaults;
 				if (isset($iterator['defaults'])) {
 					$defaults = array_merge($defaults, $iterator['defaults']);
