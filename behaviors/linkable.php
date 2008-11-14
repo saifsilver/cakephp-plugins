@@ -66,7 +66,7 @@ class LinkableBehavior extends ModelBehavior {
 					}
 					$options = am($defaults, compact('alias'), $options);
 					if (empty($options['alias'])) {
-						throw new InvalidArgumentsException(sprintf('%s::%s must receive aliased links', get_class($this), __FUNCTION__));
+						throw new InvalidArgumentException(sprintf('%s::%s must receive aliased links', get_class($this), __FUNCTION__));
 					}
 										
 					if (empty($options['table']) && empty($options['class'])) {
