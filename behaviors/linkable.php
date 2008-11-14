@@ -9,9 +9,9 @@
  * wich means that in "one to many" relations (hasMany, hasAndBelongsToMany)
  * should only be used from the "many to one" tables. i.e:
  * To fetch all Users assigneds to a Project with ProjectAssignment,
- * Project::find('all', array('link' => 'User', 'conditions' => 'project_id = 1')) 
+ * $Project->find('all', array('link' => 'User', 'conditions' => 'project_id = 1')) 
  *	 - Won't produce the desired result as data came from users table will be lost.
- * User::find('all', array('link' => 'Project', 'conditions' => 'project_id = 1'))
+ * $User->find('all', array('link' => 'Project', 'conditions' => 'project_id = 1'))
  *   - Will fetch all users related to the specified project in one query
  * 
  * - On data mining as a much lighter approach - can reduce 300+ query find operations
@@ -31,21 +31,17 @@
  
 class LinkableBehavior extends ModelBehavior {
 	
-	var $_key = 'link';
+	protected $_key = 'link';
 	
-	var $_options = array(
-		'type' => true, 'table' => true, 'alias' => true
-		,'conditions' => true, 'fields' => true, 'reference' => true
-		,'class' => true, 'defaults' => true
+	protected $_options = array(
+		'type' => true, 'table' => true, 'alias' => true,
+		'conditions' => true, 'fields' => true, 'reference' => true,
+		'class' => true, 'defaults' => true
 	);
 
-	var $_defaults = array('type' => 'LEFT');
-
-	function setup(&$Model, $options = array()) {
-		
-	}
+	protected $_defaults = array('type' => 'LEFT');
 	
-	function beforeFind(&$Model, $query) {
+	public function beforeFind(&$Model, $query) {
 		if (isset($query[$this->_key])) {
 			$optionsDefaults = $this->_defaults + array('reference' => $Model->alias, $this->_key => array());
 			$optionsKeys = $this->_options + array($this->_key => true);
@@ -113,10 +109,10 @@ class LinkableBehavior extends ModelBehavior {
 							}
 							$referenceKey = $Reference->escapeField();
 							$query['joins'][] = array(
-								'alias' => $Link->alias
-								,'table' => $Link->useTable
-								,'conditions' => "{$referenceLink} = {$referenceKey}"
-								,'type' => 'LEFT'
+								'alias' => $Link->alias,
+								'table' => $Link->useTable,
+								'conditions' => "{$referenceLink} = {$referenceKey}",
+								'type' => 'LEFT'
 							);
 							$modelKey = $_Model->escapeField();
 							$options['conditions'] = "{$modelLink} = {$modelKey}";
