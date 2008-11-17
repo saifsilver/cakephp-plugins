@@ -46,7 +46,7 @@
  */
 
 class LazyLoaderBehavior extends ModelBehavior {
-	public $mapMethods = array('/^get(_[a-z0-9_]+)|([a-z0-9]+)/' => 'lazyLoad');
+	public $mapMethods = array('/^get((_[a-z0-9_]+)|([a-z0-9]+))/' => 'lazyLoad');
 
 	public function &lazyLoad(&$Model, $association, $type = null, $instance = false) {
 		if (!$Model->exists()) {

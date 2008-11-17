@@ -122,4 +122,19 @@ class LazyLoaderBehaviorTest extends CakeTestCase {
 		$result = $this->Image->getACherryFromTheTopOfTheCakeForMePlease();
 		$this->assertFalse($result);
 	}
+	
+	function testErroneousRegexpMatch() {
+		$this->Syfile->recursive = -1;
+		$result = $this->Syfile->findById(1);
+		$expected = array('Syfile' => array(
+			'id' => 1,
+			'image_id' => 1,
+			'name' => 'Syfile 1',
+			'item_count' => null
+		));
+		$this->assertEqual($result, $expected);
+		
+		$this->expectError();
+		$this->Syfile->someMethodThatWillNeverBeHandledAsItIsNotOnlyNotImplementedInTheModelAsItIsNotImplementedInAnyOfItsBehaviors();
+	}
 }
