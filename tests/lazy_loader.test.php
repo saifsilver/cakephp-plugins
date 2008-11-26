@@ -1,6 +1,6 @@
 <?php
 /*
- * Unit test for LazyLoaderBehavior v0.1.
+ * Unit test for LazyLoaderBehavior v1.0
  *
  * LazyLoaderBehavior. What you need, When you need, The way you want.
  * RafaelBandeira <rafaelbandeira3(at)gmail(dot)com>

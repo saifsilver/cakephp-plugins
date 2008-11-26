@@ -36,13 +36,13 @@
  * $Project->lazyLoad('Company');
  * $Project->lazyLoad('Tasks');
  *
- * LazyLoaderBehavior. Easy things easy, but not less smart.
+ * LazyLoaderBehavior. What you need, When you need, The way you want.
  * RafaelBandeira <rafaelbandeira3(at)gmail(dot)com>
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @version 0.1;
+ * @version 1.0;
  */
 
 class LazyLoaderBehavior extends ModelBehavior {
