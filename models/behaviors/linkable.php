@@ -45,7 +45,7 @@ class LinkableBehavior extends ModelBehavior {
 		if (isset($query[$this->_key])) {
 			$optionsDefaults = $this->_defaults + array('reference' => $Model->alias, $this->_key => array());
 			$optionsKeys = $this->_options + array($this->_key => true);
-			$query = array_merge($query, array('joins' => array(), 'recursive' => -1));
+			$query = am(array('joins' => array()), $query, array('recursive' => -1));
 			$iterators[] = $query[$this->_key];
 			$cont = 0;
 			do {
@@ -64,7 +64,7 @@ class LinkableBehavior extends ModelBehavior {
 					if (empty($options['alias'])) {
 						throw new InvalidArgumentException(sprintf('%s::%s must receive aliased links', get_class($this), __FUNCTION__));
 					}
-										
+
 					if (empty($options['table']) && empty($options['class'])) {
 						$options['class'] = $options['alias'];
 					} elseif (!empty($options['table']) && empty($options['class'])) {
