@@ -110,7 +110,7 @@ class LinkableBehavior extends ModelBehavior {
 							$referenceKey = $Reference->escapeField();
 							$query['joins'][] = array(
 								'alias' => $Link->alias,
-								'table' => $Link->useTable,
+								'table' => $Link->getDataSource()->fullTableName($Link),
 								'conditions' => "{$referenceLink} = {$referenceKey}",
 								'type' => 'LEFT'
 							);
