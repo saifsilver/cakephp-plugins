@@ -11,6 +11,7 @@
  */
 
 App::import('Behavior', 'LazyLoader');
+App::import('Model', 'App');
 include CAKE_TESTS . 'cases' . DS . 'libs' . DS . 'model' . DS . 'models.php';
 
 class LazyLoaderBehaviorTest extends CakeTestCase {
@@ -38,7 +39,6 @@ class LazyLoaderBehaviorTest extends CakeTestCase {
 		$this->Thread->Behaviors->attach('LazyLoader');
 		
 		$this->Image->bind('Syfile', array('hasOne'));
-		$this->Thread->bind('Message', array('hasMany'));
 	}
 
 	function testBelongsTo() {
@@ -121,6 +121,53 @@ class LazyLoaderBehaviorTest extends CakeTestCase {
 		$this->Image->id = 1;
 		$result = $this->Image->getACherryFromTheTopOfTheCakeForMePlease();
 		$this->assertFalse($result);
+	}
+
+	function testOnTheFlyAssociations() {
+		$this->Message->bind('Thread');
+		$this->Message->id = 1;
+		$result = $this->Message->getThread();
+		$expected = array('Thread' => array('id' => 1, 'project_id' => 1, 'name' => 'Project 1, Thread 1'));
+		$this->assertEqual($result, $expected);
+		
+		$result = $this->Message->getThread(true);
+		$this->assertIsA($result, 'Thread');		
+	}
+	
+	function testComposedNameAssociation() {
+		$this->Image->unbindModel(array('hasOne' => array('Syfile')));
+		$this->Image->bind('SystemFile', array('hasOne', 'className' => 'Syfile'), false);
+		
+		$this->Image->id = 1;
+		$result = $this->Image->getSystemFile();
+		$expected = array('SystemFile' => array('id' => 1, 'image_id' => 1, 'name' => 'Syfile 1', 'item_count' => null));
+		$this->assertEqual($result, $expected);
+
+		$this->Portfolio->unbindModel(array('hasAndBelongsToMany' => array('Item')));
+		$this->Portfolio->bind('RelatedItem', array('hasAndBelongsToMany', 'className' => 'Item'), false);
+		
+		$this->Portfolio->id = 1;
+		$result = $this->Portfolio->getRelatedItems();
+		$expected = array(1 => 'Item 1', 3 => 'Item 3', 4 => 'Item 4', 5 => 'Item 5');
+		$this->assertEqual($result, $expected);
+	}
+	
+	function testUnderscoredStyleComposedNameAssociation() {
+		$this->Image->unbindModel(array('hasOne' => array('Syfile')));
+		$this->Image->bind('SystemFile', array('hasOne', 'className' => 'Syfile'), false);
+		
+		$this->Image->id = 1;
+		$result = $this->Image->get_system_file();
+		$expected = array('SystemFile' => array('id' => 1, 'image_id' => 1, 'name' => 'Syfile 1', 'item_count' => null));
+		$this->assertEqual($result, $expected);
+
+		$this->Portfolio->unbindModel(array('hasAndBelongsToMany' => array('Item')));
+		$this->Portfolio->bind('RelatedItem', array('hasAndBelongsToMany', 'className' => 'Item'), false);
+		
+		$this->Portfolio->id = 1;
+		$result = $this->Portfolio->get_related_items();
+		$expected = array(1 => 'Item 1', 3 => 'Item 3', 4 => 'Item 4', 5 => 'Item 5');
+		$this->assertEqual($result, $expected);
 	}
 	
 	function testErroneousRegexpMatch() {

@@ -118,17 +118,17 @@ class LazyLoaderBehavior extends ModelBehavior {
 		}
 		$associateds = $Model->getAssociated();
 		if (!empty($associateds)) {
-			$associated = Inflector::camelize($association);
+			$associated = str_replace('_', '', $association);
 			$alias = Inflector::classify($association);
-			
-			if (isset($associateds[$alias])) {
-				$type = $associateds[$alias];
-				$association = $Model->{$type}[$alias];
+
+			foreach ($associateds as $alias => $type) {
+				$lowercased = strtolower($alias);
 				$valid = (
-					($type === 'belongsTo' || $type === 'hasOne') ||
-					Inflector::pluralize($alias) === $associated
+					(($type === 'belongsTo' || $type === 'hasOne') && $lowercased === $associated) ||
+					(Inflector::pluralize($lowercased) === $associated)
 				);
 				if ($valid) {
+					$association = $Model->{$type}[$alias];
 					return compact('alias', 'type', 'association');
 				}
 			}
