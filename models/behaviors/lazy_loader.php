@@ -42,13 +42,13 @@
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @version 1.0;
+ * @version 1.1;
  */
 
 class LazyLoaderBehavior extends ModelBehavior {
 	public $mapMethods = array('/^get((_[a-z0-9_]+)|([a-z0-9]+))/' => 'lazyLoad');
 
-	public function &lazyLoad(&$Model, $association, $type = null, $instance = false) {
+	public function &lazyLoad(&$Model, $association, $type = null, $options = array()) {
 		if (!$Model->exists()) {
 			throw new Exception('Model must be associated with an existing record');
 			return false;
@@ -57,24 +57,31 @@ class LazyLoaderBehavior extends ModelBehavior {
 		if ($association === false) {
 			throw new InvalidArgumentException('Model must be associated with the model intended to be loaded');
 			return false;
-		} elseif ($type === true) {
-			$type = null;
-			$instance = true;
 		}
 
-		if (empty($type)) {
-			if ($association['type'] === 'hasAndBelongsToMany' || $association['type'] === 'hasMany') {
-				$type = 'list';
-			} else {
-				$type = 'first';
+		$multiple = ($association['type'] === 'hasAndBelongsToMany' || $association['type'] === 'hasMany');
+		if ($multiple) {
+			if (is_array($type)) {
+				$options = $type;
+				unset($type);
 			}
+			if (empty($type)) {
+				$type = 'list';
+			}
+		} else {
+			$instance = (!$multiple && !empty($type));
+			$type = 'first';
 		}
-		$keys = array('conditions' => true, 'order' => true, 'group' => true);
+
+		$queryKeys = array('conditions' => true, 'group' => true, 'order' => true);
 		if ($type !== 'list') {
-			$keys['fields'] = true;
+			$queryKeys['fields'] = true;
 		}
-		$query = array_intersect_key($association['association'], $keys);
-		$query['recursive'] = -1;
+		$query = array_merge(
+			array_intersect_key($association['association'], $queryKeys),
+			array('recursive' => -1),
+			$options
+		);
 		if (!isset($query['conditions'])) {
 			$query['conditions'] = array();
 		} elseif (!is_array($query['conditions'])) {
@@ -103,7 +110,7 @@ class LazyLoaderBehavior extends ModelBehavior {
 			$query['conditions'][] = array($_Model->escapeField() => $Model->field($association['association']['foreignKey']));
 		}
 
-		if ($instance && ($association['type'] === 'belongsTo' || $association['type'] === 'hasOne')) {
+		if (!$multiple && $instance) {
 			$_Model->set($_Model->find($type, $query));
 			return $_Model;
 		} else {
