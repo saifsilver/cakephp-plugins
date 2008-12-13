@@ -15,6 +15,11 @@
 *.bak
 
 ###
+# Konqueror preferences files
+###
+.directory
+
+###
 # App tmp content
 ###
 tmp/cache/*
